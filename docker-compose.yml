@@ -1,0 +1,25 @@
+services:
+  chatbot-user:
+    build:
+      context: ./chatbot-user
+    ports:
+      - "3001:3000"
+    depends_on:
+      - db
+    volumes:
+      - ./chatbot-user:/app
+    command: npm run start:dev
+
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    ports:
+      - "3306:3306" # Exponer MySQL en el puerto 3306 del host
+    env_file:
+      - .env
+    volumes:
+      - db_data:/var/lib/mysql # Montar el volumen en el directorio de datos de MySQL
+      
+volumes:
+  db_data:
+    driver: local
