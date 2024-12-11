@@ -4,22 +4,37 @@ services:
       context: ./chatbot-user
     ports:
       - "3001:3000"
-    depends_on:
-      - db
     volumes:
       - ./chatbot-user:/app
     command: npm run start:dev
+    depends_on:
+      - db
+      - rabbitmq
 
   db:
     image: mysql:8.0
     container_name: mysql-db
     ports:
-      - "3306:3306" # Exponer MySQL en el puerto 3306 del host
+      - "3306:3306"
     env_file:
       - .env
     volumes:
-      - db_data:/var/lib/mysql # Montar el volumen en el directorio de datos de MySQL
+      - db_data:/var/lib/mysql
+  
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
       
 volumes:
   db_data:
+    driver: local
+  rabbitmq_data:
     driver: local
