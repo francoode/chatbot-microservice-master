@@ -1,3 +1,6 @@
 [submodule "chatbot-user"]
 	path = chatbot-user
 	url = https://github.com/francoode/chatbot-microservices-containers
+[submodule "chatbot-logs"]
+	path = chatbot-logs
+	url = ./chatbot-logs
