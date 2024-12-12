@@ -11,6 +11,19 @@ services:
       - db
       - rabbitmq
 
+  chatbot-logs:
+    build:
+      context: ./chatbot-logs
+    ports:
+      - "3002:3000"
+    volumes:
+      - ./chatbot-logs:/app
+    command: npm run start:dev
+    depends_on:
+      - db
+      - rabbitmq
+
+
   db:
     image: mysql:8.0
     container_name: mysql-db
