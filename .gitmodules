@@ -4,3 +4,6 @@
 [submodule "chatbot-logs"]
 	path = chatbot-logs
 	url = ./chatbot-logs
+[submodule "chatbot-messages"]
+	path = chatbot-messages
+	url = ./chatbot-messages/
