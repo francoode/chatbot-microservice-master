@@ -6,7 +6,8 @@ services:
       - "3001:3000"
     volumes:
       - ./chatbot-user:/app
-    command: npm run start:dev
+    #  - ./shared-lib:/app/node_modules/@chatbot/shared-lib
+    command: npm run start
     depends_on:
       - db
       - rabbitmq
@@ -18,11 +19,24 @@ services:
       - "3002:3000"
     volumes:
       - ./chatbot-logs:/app
-    command: npm run start:dev
+    #  - ./shared-lib:/app/node_modules/@chatbot/shared-lib
+    command: npm run start
     depends_on:
       - db
       - rabbitmq
 
+  chatbot-chats:
+    build:
+      context: ./chatbot-chats
+    ports:
+      - "3003:3000"
+    volumes:
+      - ./chatbot-chats:/app
+    #  - ./shared-lib:/app/node_modules/@chatbot/shared-lib
+    command: npm run start
+    depends_on:
+      - db
+      - rabbitmq
 
   db:
     image: mysql:8.0
@@ -33,7 +47,9 @@ services:
       - .env
     volumes:
       - db_data:/var/lib/mysql
-  
+    logging:
+      driver: "none"    
+
   rabbitmq:
     image: rabbitmq:management
     container_name: rabbitmq
@@ -45,7 +61,9 @@ services:
       RABBITMQ_DEFAULT_PASS: password
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
-      
+    logging:
+      driver: "none"
+
 volumes:
   db_data:
     driver: local
