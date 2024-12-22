@@ -6,8 +6,8 @@ services:
       - "3001:3000"
     volumes:
       - ./chatbot-user:/app
-    #  - ./shared-lib:/app/node_modules/@chatbot/shared-lib
-    command: npm run start
+      - ./shared-lib:/app/node_modules/@chatbot/shared-lib
+    command: npm run start:dev
     depends_on:
       - db
       - rabbitmq
@@ -19,8 +19,8 @@ services:
       - "3002:3000"
     volumes:
       - ./chatbot-logs:/app
-    #  - ./shared-lib:/app/node_modules/@chatbot/shared-lib
-    command: npm run start
+      - ./shared-lib:/app/node_modules/@chatbot/shared-lib
+    command: npm run start:dev
     depends_on:
       - db
       - rabbitmq
@@ -32,8 +32,8 @@ services:
       - "3003:3000"
     volumes:
       - ./chatbot-chats:/app
-    #  - ./shared-lib:/app/node_modules/@chatbot/shared-lib
-    command: npm run start
+      - ./shared-lib:/app/node_modules/@chatbot/shared-lib
+    command: npm run start:dev
     depends_on:
       - db
       - rabbitmq
