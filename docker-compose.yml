@@ -12,19 +12,6 @@ services:
       - db
       - rabbitmq
 
-  chatbot-logs:
-    build:
-      context: ./chatbot-logs
-    ports:
-      - "3002:3000"
-    volumes:
-      - ./chatbot-logs:/app
-      - ./shared-lib:/app/node_modules/@chatbot/shared-lib
-    command: npm run start:dev
-    depends_on:
-      - db
-      - rabbitmq
-
   chatbot-chats:
     build:
       context: ./chatbot-chats
