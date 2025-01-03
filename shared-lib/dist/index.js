@@ -15,3 +15,8 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./consts/all-const.helper"), exports);
+__exportStar(require("./interfaces/chat.interface"), exports);
+__exportStar(require("./interfaces/message.interface"), exports);
+__exportStar(require("class-transformer"), exports);
+__exportStar(require("./queue/rabbit-clients"), exports);
+__exportStar(require("@nestjs/microservices"), exports);
