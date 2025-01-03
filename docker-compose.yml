@@ -1,7 +1,10 @@
 services:
   chatbot-user:
+    container_name: chatbot-user
     build:
       context: ./chatbot-user
+    networks:
+      - kong-net
     ports:
       - "3001:3000"
     volumes:
@@ -13,8 +16,11 @@ services:
       - rabbitmq
 
   chatbot-chats:
+    container_name: chatbot-chats
     build:
       context: ./chatbot-chats
+    networks:
+      - kong-net
     ports:
       - "3003:3000"
     volumes:
@@ -25,18 +31,19 @@ services:
       - db
       - rabbitmq
 
-  chatbot-messages:
-    build:
-      context: ./chatbot-messages
-    ports:
-      - "3003:3000"
-    volumes:
-      - ./chatbot-messages:/app
-      - ./shared-lib:/app/node_modules/@chatbot/shared-lib
-    command: npm run start:dev
-    depends_on:
-      - db
-      - rabbitmq
+  #chatbot-messages:
+  #  build:
+  #    context: ./chatbot-messages
+  #  ports:
+  #    - "3003:3000"
+  #  volumes:
+  #    - ./chatbot-messages:/app
+  #    - ./shared-lib:/app/node_modules/@chatbot/shared-lib
+  #  command: npm run start:dev
+  #  depends_on:
+  #    - db
+  #    - rabbitmq
+  
 
   db:
     image: mysql:8.0
@@ -48,7 +55,56 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     logging:
-      driver: "none"    
+      driver: "none"
+    networks:
+      - kong-net
+    
+  kong-db:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    volumes:
+      - kong-db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: kong
+      POSTGRES_PASSWORD: kong
+      POSTGRES_DB: kong
+    networks:
+      - kong-net
+
+  kong:
+    image: kong/kong-gateway:3.9.0.0
+    container_name: kong
+    depends_on:
+      - kong-db
+    networks:
+      - kong-net
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: kong-db
+      KONG_PG_PORT: 5432
+      KONG_PG_USER: kong
+      KONG_PG_PASSWORD: kong
+      KONG_PG_DATABASE: kong
+      KONG_ADMIN_PASSWORD: admin
+      KONG_ADMIN_GUI_URL: "http://localhost:8002"
+      KONG_DECLARATIVE_CONFIG: "/kong/declarative/kong.yml"
+      KONG_PROXY_ACCESS_LOG: "/dev/stdout"
+      KONG_ADMIN_ACCESS_LOG: "/dev/stdout"
+      KONG_PROXY_ERROR_LOG: "/dev/stderr"
+      KONG_ADMIN_ERROR_LOG: "/dev/stderr"
+    ports:
+      - "8000:8000"
+      - "8443:8443"
+      - "8001:8001"
+      - "8444:8444"
+      - "8002:8002"
+      - "8445:8445"
+      - "8003:8003"
+      - "8004:8004"
+    command: ["kong", "migrations", "bootstrap"]
+    volumes:
+      - "./config/api-gateway/:/kong/declarative/"
 
   rabbitmq:
     image: rabbitmq:management
@@ -63,9 +119,17 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq
     logging:
       driver: "none"
+    networks:
+      - kong-net
 
 volumes:
   db_data:
     driver: local
   rabbitmq_data:
     driver: local
+  kong-db:
+    driver: local
+
+networks:
+  kong-net:
+    driver: bridge

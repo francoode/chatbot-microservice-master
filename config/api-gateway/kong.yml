@@ -1,0 +1,21 @@
+_format_version: "1.1"
+
+services:
+  - name: chatbot-chats-service
+    url: http://chatbot-chats:3003
+    routes:
+      - name: chatbot-chats-route
+        paths:
+          - /chats
+        methods:
+          - GET
+        strip_path: false
+
+
+  - name: chatbot-users-service
+    url: http://chatbot-user:3001
+    routes:
+      - name: chatbot-users-route
+        paths:
+          - /users
+
