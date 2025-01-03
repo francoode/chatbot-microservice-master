@@ -44,7 +44,6 @@ services:
   #    - db
   #    - rabbitmq
   
-
   db:
     image: mysql:8.0
     container_name: mysql-db
@@ -58,36 +57,16 @@ services:
       driver: "none"
     networks:
       - kong-net
-    
-  kong-db:
-    image: postgres:13
-    ports:
-      - "5432:5432"
-    volumes:
-      - kong-db:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: kong
-      POSTGRES_PASSWORD: kong
-      POSTGRES_DB: kong
-    networks:
-      - kong-net
 
   kong:
     image: kong/kong-gateway:3.9.0.0
     container_name: kong
-    depends_on:
-      - kong-db
     networks:
       - kong-net
     environment:
-      KONG_DATABASE: postgres
-      KONG_PG_HOST: kong-db
-      KONG_PG_PORT: 5432
-      KONG_PG_USER: kong
-      KONG_PG_PASSWORD: kong
-      KONG_PG_DATABASE: kong
-      KONG_ADMIN_PASSWORD: admin
+      KONG_DATABASE: off
       KONG_ADMIN_GUI_URL: "http://localhost:8002"
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001"
       KONG_DECLARATIVE_CONFIG: "/kong/declarative/kong.yml"
       KONG_PROXY_ACCESS_LOG: "/dev/stdout"
       KONG_ADMIN_ACCESS_LOG: "/dev/stdout"
@@ -102,7 +81,7 @@ services:
       - "8445:8445"
       - "8003:8003"
       - "8004:8004"
-    command: ["kong", "migrations", "bootstrap"]
+    command: ["kong", "start"]
     volumes:
       - "./config/api-gateway/:/kong/declarative/"
 
