@@ -25,6 +25,19 @@ services:
       - db
       - rabbitmq
 
+  chatbot-messages:
+    build:
+      context: ./chatbot-messages
+    ports:
+      - "3003:3000"
+    volumes:
+      - ./chatbot-messages:/app
+      - ./shared-lib:/app/node_modules/@chatbot/shared-lib
+    command: npm run start:dev
+    depends_on:
+      - db
+      - rabbitmq
+
   db:
     image: mysql:8.0
     container_name: mysql-db

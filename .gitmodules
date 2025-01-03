@@ -4,3 +4,6 @@
 [submodule "chatbot-chats"]
 	path = chatbot-chats
 	url = ./chatbot-chats/
+[submodule "chatbot-messages"]
+	path = chatbot-messages
+	url = git@github.com:francoode/chatbot-messages.git
