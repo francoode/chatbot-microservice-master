@@ -31,18 +31,21 @@ services:
       - db
       - rabbitmq
 
-  #chatbot-messages:
-  #  build:
-  #    context: ./chatbot-messages
-  #  ports:
-  #    - "3003:3000"
-  #  volumes:
-  #    - ./chatbot-messages:/app
-  #    - ./shared-lib:/app/node_modules/@chatbot/shared-lib
-  #  command: npm run start:dev
-  #  depends_on:
-  #    - db
-  #    - rabbitmq
+  chatbot-messages:
+   container_name: chatbot-messages
+   build:
+     context: ./chatbot-messages
+   networks:
+      - kong-net
+   ports:
+     - "3004:3000"
+   volumes:
+     - ./chatbot-messages:/app
+     - ./shared-lib:/app/node_modules/@chatbot/shared-lib
+   command: npm run start:dev
+   depends_on:
+     - db
+     - rabbitmq
   
   db:
     image: mysql:8.0
@@ -68,10 +71,10 @@ services:
       KONG_ADMIN_GUI_URL: "http://localhost:8002"
       KONG_ADMIN_LISTEN: "0.0.0.0:8001"
       KONG_DECLARATIVE_CONFIG: "/kong/declarative/kong.yml"
-      KONG_PROXY_ACCESS_LOG: "/dev/stdout"
-      KONG_ADMIN_ACCESS_LOG: "/dev/stdout"
-      KONG_PROXY_ERROR_LOG: "/dev/stderr"
-      KONG_ADMIN_ERROR_LOG: "/dev/stderr"
+     # KONG_PROXY_ACCESS_LOG: "/dev/stdout"
+     # KONG_ADMIN_ACCESS_LOG: "/dev/stdout"
+     # KONG_PROXY_ERROR_LOG: "/dev/stderr"
+     # KONG_ADMIN_ERROR_LOG: "/dev/stderr"
     ports:
       - "8000:8000"
       - "8443:8443"

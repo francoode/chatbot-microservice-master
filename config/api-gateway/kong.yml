@@ -12,14 +12,16 @@
      - /chats
      strip_path: false
 
-# _format_version: "1.1"
+ - host: chatbot-messages
+   name: chatbot-messages
+   port: 3000
+   protocol: http
+   routes:
+   - name: messages
+     paths:
+     - /messages
+     strip_path: false
 
-# services:
-#   - name: chatbot-chats-service
-#     url: http://chatbot-chats:3003
-#     routes:
-#       - name: chatbot-chats-route
-#         paths:
-#           - /
+
 
 

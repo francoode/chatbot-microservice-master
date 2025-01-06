@@ -20,3 +20,4 @@ __exportStar(require("./interfaces/message.interface"), exports);
 __exportStar(require("class-transformer"), exports);
 __exportStar(require("./queue/rabbit-clients"), exports);
 __exportStar(require("@nestjs/microservices"), exports);
+__exportStar(require("./helpers/rxjs"), exports);

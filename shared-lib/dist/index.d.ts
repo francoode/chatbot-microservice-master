@@ -4,3 +4,4 @@ export * from './interfaces/message.interface';
 export * from 'class-transformer';
 export * from './queue/rabbit-clients';
 export * from '@nestjs/microservices';
+export * from './helpers/rxjs';
